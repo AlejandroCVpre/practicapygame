@@ -67,19 +67,14 @@ class movimiento(object):
         self.angulo = math.degrees(math.atan2(-dist_y, dist_x))
         return self.angulo
 
-    @staticmethod
-    def rotacion_mouse_static(pos_mouse, coordenada_inicial):
-        mouse = pos_mouse
-        pos_obj_x, pos_obj_y = coordenada_inicial.x, coordenada_inicial.y
-        dist_x, dist_y = pos_obj_x - mouse[0], pos_obj_y - mouse[1]
-        angulo = math.degrees(math.atan2(-dist_y, dist_x))
-        return angulo
+    def velocidad_relativa_raton(self, velocidad_nominal):
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        distance_x, distance_y = mouse_x - self.coordenada.x, mouse_y - self.coordenada.y
+        angle = math.atan2(distance_y, distance_x)
+        speed_x, speed_y = velocidad_nominal * math.cos(angle), velocidad_nominal * math.sin(angle)
+        velocidad_relativa = vector(speed_x, speed_y)
+        return velocidad_relativa
 
-    def calc_direccion(self):
-        x = 1 * math.cos(self.angulo)
-        y = 1 * math.sin(self.angulo)
-        return vector(x, y)
-
-    def lineal(self, direccion, time_passed_seconds):
-        self.coordenada += direccion * self.speed * time_passed_seconds
+    def lineal(self, time_passed_seconds):
+        self.coordenada += self.speed * time_passed_seconds
         return self.coordenada
